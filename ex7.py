@@ -35,8 +35,6 @@ total_cost = float(total_cost)
 #find deposit amount given property cost
 portion_deposit = total_cost * 0.2 #down payment is assumed ot be 20%
 
-#month_end = current_savings*r/12 + annual_salary/12 (monthly salary)
-
 #incrementing index for total months savings required
 months = 0
 
@@ -44,16 +42,20 @@ months = 0
 while current_savings < portion_deposit:
     #debug statement to show while has been triggered correctly
     print('Entered while!')
-    #for statment to iterate through a simulated 12 months of salary income
-    for m in range(1, 12, 1):
-        print (m)
-        print(current_savings)
-        current_savings = current_savings + ((current_savings * interest_multiplier) / 12 )
-        current_savings = current_savings + monthly_salary * portion_saved
-        #increment by 1 the months variable for each loop of 'for'
-        months += 1
+    print(current_savings)
+    #caluculate 0.04% monthly interest from current savings amount
+    monthly_interest = (current_savings * interest_multiplier) /12
+
+    #add monthly interest to current savings (before or after salary addition?)
+    current_savings = current_savings + monthly_interest
+
+    #current savings is then added on to by percentage contribution for that month
+    current_savings = current_savings + monthly_salary * portion_saved
+
+    #increment by 1 the months variable for each loop of 'for'
+    months += 1
 
 print()
 print()
-print(f"The money required for a 20\% deposit on this house is {portion_deposit}.")
+print(f"The money required for a 20/% deposit on this house is {portion_deposit}.")
 print(f"The amount of months required to save for this deposit using the given figures is {months}.")
