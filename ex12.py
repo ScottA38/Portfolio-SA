@@ -79,7 +79,7 @@ def hotel_costs(nights):
     as an argument (type: integer) and multiply by the fixed accom_per_night value (70 GBP, type: integer) to give a total accomodation
     cost. Then returns this value.
     """
-    print("\nHotel cost function:", nights)
+
     #times fixed accom_per_night value by amount of nights stayed within accomodation - assign to accom_cost
     accom_cost = accom_per_night * nights
     #return accom_cost
@@ -94,9 +94,8 @@ def plane_ticket_cost(city, airl_class_name):
 
     Once these corresponding dict values are returned times them together to find the total air travel costs.
     """
-    print("\nPlane ticket function:", airl_costs["{}".format(city)])
-    print(airl_class_name)
-    ticket_value = airl_costs[city] * airl_class[airl_class_name]
+
+    ticket_value = int(airl_costs[city] * airl_class[airl_class_name])
     return ticket_value
 
 def rental_car_cost(days):
@@ -112,8 +111,6 @@ def rental_car_cost(days):
     one discount can be applied. This method could be applied to a larger range of rental lengths given 1st condition is longest period
     to validate a discount, followed by the next longest etc.
     """
-    print("\nRental car cost function:", days)
-
     #times argument integer 'days' by the fixed car hire cost
     rental_cost = car_hire * days
 
@@ -148,17 +145,15 @@ def total_costs(city, days):
     rental_c = rental_car_cost(days)
 
     #prints output of each indvidual calculation for cost and all added together
-    print(f"\nThankyou for supplying the requested information.\n\n Based on your inputs I calculate your airline charges will be {plane_c},\n your hotel charges will be {hotel_c} \nand your rental will be {rental_c}.")
+    print(f"Thankyou for supplying the requested information.\n\n Based on your inputs I calculate your airline charges will be £{plane_c}, your hotel charges will be £{hotel_c} \nand your rental will be £{rental_c}.")
     total_c = plane_c + hotel_c + rental_c
-    print(f"This means that the estimated total cost of your trip is {total_c}")
-
-print("Type of airl_costs:", type(airl_costs), "\nType of airl_class: ", type(airl_class))
+    print(f"\nThis means that the estimated total cost of your trip is £{total_c}\n\n")
 
 #welcome message
-print("Welcome to SA's trip travel cost calculator...\n\n\n")
+print("Welcome to SA's trip travel cost calculator...\n")
 
 #ask user for integer input of number of nights and convert to int
-days = int(input("\nPlease enter the number of days you wish to stay at your specified destination (in whole numbers): "))
+days = int(input("Please enter the number of days you wish to stay at your specified destination (in whole numbers): "))
 
 #calculate corresponding number of nights to days
 nights = days - 1
@@ -169,10 +164,8 @@ city = data_entry("city", airl_costs)
 #ask user for airline class selection -
 airl_class_name = data_entry("Airline class", airl_class)
 
-#debug to check the type status of airl_costs and airl_class
-print("Type of airl_costs:", type(airl_costs), "\nType of airl_class: ", type(airl_class))
-#debug to check the contents of airl_class after calling data_entry function
-# print(airl_class)
+#blank line for visual clarity
+print("\n")
 
 #call function which calls all relevant associated functions to calulate all other
 total_costs(city, days)
