@@ -12,65 +12,68 @@ airl_costs = {"New York": 2000, "Auckland": 790, "Venice": 154, "Glasgow": 65}
 #array of class names and correponding
 airl_class = {"Economy": 1.0, "Premium Economy": 1.3, "Business Class": 1.6, "First Class": 1.9}
 
-def key_index(array):
+def iterate_keys(some_dict, choice):
     """
-    Creates a new dict which utilises a numeric index as a key and existing key values
-    from the input dict as the values.
-
-    This function is utilised by data_entry(subject,array) to allow the user
-    to input an integer for selection of data rather than copying a string verbatim.
+    Modular (i think?) 'for' loop to iterate over the keys of a dict creating an temporary index at runtime. If choice arg is supplied (int)
+    this is tested against the iterator index 'i' for each iteration, and processes occur to assign a return value if this comparison returns true at
+    any point
     """
-    #create an assoc array from the key of the associative array referenced as arg in data_entry
-    indexed_array = list(array.keys())
-    return indexed_array
+    for i, value in enumerate(some_dict.keys()):
+        if choice == None:
+            #for each entry in the list print an index number and the location string so the correct spelling can be identified
+            print(f"Location {i}:   \"{value}\".")
+        #conditional within for to see if user_input number (if supplied) is equal to the iterator index, i
+        elif i == choice:
+            #congrats message
+            print(f"Success! The number you selected was succesfully located within the options provided.")
+            #assign choice_key to the current dict key value it is iterating over
+            choice_key = value
+            #return the choice_key variable with the correct dict_key saved as string
+            return choice_key
 
-#function template used to individually assign to different variables using
-#subject is the data subject to be selected (such as city), array arg passes list of options as string
 def data_entry(subject, array):
     """
     A uniformly applicable function which takes a data subject (simply for user's reference in print
-    statements) and a dict from which the user is required to select a specific value from
+    statements) and a dict (argument name = 'array) from which the user is required to select a specific value from
     all existing keys.
 
     The function notifies user of the task to be undertaken before printing a list of indexes with corresponding
-    values taken from the key of the dict
+    values taken. The user enters a number to select an option, and this is translated into the corresponding key value within the input dict 'array'
+    before this value is returned from the function.
     """
-
-    #assign output of key_index(array) function to a specific key list (data type of key_list = 'list')
-    key_list = key_index(array)
 
     #iterate through city_index.items()
     while 1:
+        #setting/ resetting value of choice to none for each loop
+        choice = None
 
         #enter blank line for visual clarity for user
         print("")
 
-        iterator = 0
-
-        for i, value in enumerate(key_list):
-            # print(i)
-            # iterator = str(i)
-            #for each entry in the list print an index number and the location string so the correct spelling can be identified
-            print(f"Location {i}:   \"{value}\".")
+        #call function to iterate through the keys of the dict array applying an arbitrary index so that the user can select from the options via a number
+        iterate_keys(array, None)
 
         #take city name input from user
         choice = int(input("\n\nPlease copy a corresponding number for the {} name from above to choose that option: ".format(subject)))
 
-        #initialise variable to index iterations in for loop
-        index = 0
-
-        #iterate through key
-        for target in key_list:
-            if choice == index:
-                #success message (debug: for loop works for a selection)
-                print(f"\n{subject} successfully chosen.")
-                #assign value to be returned associated value of index selected variable in LIST of keys created by key_index(array)
-                choice_key = key_list[index]
-                #for loop condition achieved - break out of for loop
+        #check that the user's input is no outside of the range of possible options for selection (above max index no or below 0)
+        if choice >= len(array) or choice <  0:
+            #print error message to notify user of issue
+            print(f"The data given is not a recognised identifier for any of the {subject} options supplied \n- please try again.")
+            #stop all current loop processes and restart back at the top of while loop
+            continue
+        #if the guess is not out of range for the list of current options
+        else:
+            #set the value of variable to be returned by data_entry() to the return value of iterate_keys(array, choice)
+            choice_key = iterate_keys(array, choice)
+            #conditional to ensure that key was found - if choice_key is None then the user input was not found within the iterate_keys_funtion
+            if choice_key != None:
                 return choice_key
-            index +=1
-        #if for loop exhausts all iterations and match is not found alert user that selection has not been found - restart while
-        print(f"\n{subject} entered does not match a recognised {subject} within this program. \n Please read list and try again.")
+            else:
+                print(f"Something went wrong with the loop for data_entry() of {subject}, killing application...")
+                exit(1)
+
+
 
 #define a function to take arg 'nights' and calculate the cost of a stay
 def hotel_costs(nights):
@@ -79,7 +82,7 @@ def hotel_costs(nights):
     as an argument (type: integer) and multiply by the fixed accom_per_night value (70 GBP, type: integer) to give a total accomodation
     cost. Then returns this value.
     """
-
+    
     #times fixed accom_per_night value by amount of nights stayed within accomodation - assign to accom_cost
     accom_cost = accom_per_night * nights
     #return accom_cost
@@ -94,8 +97,7 @@ def plane_ticket_cost(city, airl_class_name):
 
     Once these corresponding dict values are returned times them together to find the total air travel costs.
     """
-
-    ticket_value = int(airl_costs[city] * airl_class[airl_class_name])
+    ticket_value = airl_costs[city] * airl_class[airl_class_name]
     return ticket_value
 
 def rental_car_cost(days):
@@ -111,6 +113,7 @@ def rental_car_cost(days):
     one discount can be applied. This method could be applied to a larger range of rental lengths given 1st condition is longest period
     to validate a discount, followed by the next longest etc.
     """
+
     #times argument integer 'days' by the fixed car hire cost
     rental_cost = car_hire * days
 
@@ -145,15 +148,18 @@ def total_costs(city, days):
     rental_c = rental_car_cost(days)
 
     #prints output of each indvidual calculation for cost and all added together
-    print(f"Thankyou for supplying the requested information.\n\n Based on your inputs I calculate your airline charges will be £{plane_c}, your hotel charges will be £{hotel_c} \nand your rental will be £{rental_c}.")
+    print(f"\nThankyou for supplying the requested information.\n\n Based on your inputs I calculate your airline charges will be {plane_c},\n your hotel charges will be {hotel_c} \nand your rental will be {rental_c}.")
     total_c = plane_c + hotel_c + rental_c
-    print(f"\nThis means that the estimated total cost of your trip is £{total_c}\n\n")
+    print(f"This means that the estimated total cost of your trip is {total_c}")
+
+#debug to to ascertain that airl_costs and airl_class enter the scripts as dicts correctly
+# print("Type of airl_costs:", type(airl_costs), "\nType of airl_class: ", type(airl_class))
 
 #welcome message
-print("Welcome to SA's trip travel cost calculator...\n")
+print("Welcome to SA's trip travel cost calculator...\n\n\n")
 
 #ask user for integer input of number of nights and convert to int
-days = int(input("Please enter the number of days you wish to stay at your specified destination (in whole numbers): "))
+days = int(input("\nPlease enter the number of days you wish to stay at your specified destination (in whole numbers): "))
 
 #calculate corresponding number of nights to days
 nights = days - 1
@@ -164,8 +170,8 @@ city = data_entry("city", airl_costs)
 #ask user for airline class selection -
 airl_class_name = data_entry("Airline class", airl_class)
 
-#blank line for visual clarity
-print("\n")
+#debug to check the type status of airl_costs and airl_class
+# print("Type of airl_costs:", type(airl_costs), "\nType of airl_class: ", type(airl_class))
 
 #call function which calls all relevant associated functions to calulate all other
 total_costs(city, days)
