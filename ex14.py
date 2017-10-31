@@ -95,12 +95,14 @@ def get_available_letters(letters_guessed):
     returns: string (of letters), comprised of letters that represents which letters have not
       yet been guessed.
     '''
-    #set a string to all consecutive characters in the lowercase alphabet
+
+    #initialise a string and assign to all consecutive characters in the lowercase alphabet
     alphabet = string.ascii_lowercase
+
     #iterate through letters_guessed list item by item
     for item in letters_guessed:
             #remove current item from alphabet string
-            alphabet.remove(item)
+            alphabet.replace(item, "")
     #return not(letters_guessed) where U = string.ascii_lowercase
     return alphabet
 
@@ -138,26 +140,29 @@ def hangman(secret_word):
     letters_guessed = []
     #initialise a string which holds the character for user's guess
     user_guess = ""
-    #set variable to hold string of unused letters in the alphabet
-    letters_unused = get_available_letters(letters_guessed)
     #set variable to hold output for get_guessed_word()
     display_current = get_guessed_word(secret_word, letters_guessed)
+
+    #intro message
+    print("Welcome to hangman. \nYour objective is to guess the letters before you run out of lives.")
+
+    #take length of secret word as an int and save to string_length
+    string_length = len(secret_word)
+    #message informing of length of word to be guessed
+    print(f"\n\nYour opponent has selected a random word which is {string_length} characters long.")
+    #enter while loop which will exit when user_lives is less than or equal to 1
     while user_lives > 1:
         #increment the user_attempts int value
         user_attempts +=1
 
-        #intro message
-        print("Welcome to hangman. \nYour objective is to guess the letters before you run out of lives.")
         #informing user
         print(f"Your current amount of lives is: {user_lives}.")
 
-        string_length = len(secret_word)
-        print(f"\n\nYour opponent has selected a random word which is {string_length} characters long.")
+
         print("\n",get_guessed_word(secret_word, letters_guessed))
 
-        print("\n\nThe range of letters which have not been guessed are as follows:\n\n")
-        for char in letters_unused:
-            print(f"{char}  "),
+        print("\n\nThe range of letters which have not been guessed are as follows:\n")
+        print(get_available_letters(letters_guessed))
         #intialise exit condition for while
         guess_ok = False
         #set up while with above bool variable as exit condition
@@ -173,18 +178,23 @@ def hangman(secret_word):
                 #error message
                 print("\n\nGuess was not a recognised letter, try again (ensure lowercase)...")
             else:
+                #debug to show that else is triggered
                 print("*debug*Guess is ok.")
+                letters_guessed.append(user_guess)
+                #activate while exit condition
                 guess_ok = True
+        #conditional for if guessed char is within the secret_word
         if user_guess in secret_word:
+            #success message
             print(f"\n\nThe guess {user_guess} is a letter in the target word!")
+            #if is_word_guessed return value evaulates to true (all chars in word are successfully guessed)
             if is_word_guessed(secret_word, letters_guessed) == True:
+                #if
                 print(f"\n\nWell done you have successfully guessed the word {secret_word}!\nIt took you {user_attempts} attempts.")
                 break #use exit() or break??
         else:
             print(f"\n\nUnlucky, the guess {user_guess} is not a letter in the target word")
             user_lives -= 1
-        #display the current letters guessed within the word so far in a print statement
-        print(f"\n\nHere is your target word so far: {display_current}")
 
     #message of comiseration if user runs out of guesses
     print("Unlucky, you ran out of guesses....")
