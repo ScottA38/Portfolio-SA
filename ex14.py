@@ -60,7 +60,7 @@ def is_word_guessed(secret_word, letters_guessed):
         #letters_guessed array
         if char not in letters_guessed:
             #debug statement to ensure if has been/hasn't been triggered
-            print("\n*debug*Char does not match letters - return false.")
+            # print("\n*debug*Char does not match letters - return false.")
             return False
     #if for loop runs without triggering conditional return true
     return True
@@ -95,16 +95,32 @@ def get_available_letters(letters_guessed):
     returns: string (of letters), comprised of letters that represents which letters have not
       yet been guessed.
     '''
+    #intialise a variable 'alphabet' to hold a full lowercase alphabet list (each letter is a string in list)
+    alphabet = list(string.ascii_lowercase)
 
-    #initialise a string and assign to all consecutive characters in the lowercase alphabet
-    alphabet = string.ascii_lowercase
+    #intialise a string variable for return value
+    letters = ""
 
     #iterate through letters_guessed list item by item
-    for item in letters_guessed:
-            #remove current item from alphabet string
-            alphabet.replace(item, "")
+    for item in alphabet:
+        if item in letters_guessed:
+            #remove the specified iterable 'item' from list
+            alphabet.remove(item)
+    #debug
+    # print(f"1st stage: new alphabet is - {alphabet}")
+
+    #use for loop to iterate over all values in alphabet and return them back to string (following list() call) by concatenating on to letters variable each time
+    for char in alphabet:
+        letters = letters + str(char)
+    #debug
+    # print(f"2nd stage: new strinf is - {alphabet}")
+
+
+    #previously to this I had string.ascii_lowercase still as a string, intitialised within the function and used exactly the same logic but with
+    #alphabet.replace(item, "") - it worked intially but always reset itself after a loop, but now I cannot get it to work?
+
     #return not(letters_guessed) where U = string.ascii_lowercase
-    return alphabet
+    return letters
 
 
 def hangman(secret_word):
@@ -132,14 +148,19 @@ def hangman(secret_word):
 
     Follows the other limitations detailed in the problem write-up.
     '''
+
     #intialise a 'tries' variable as int
     user_attempts = 0
+
     #intialise amount of lives as an int remember to set condition to exit if the user's lives less than or equal to 1
     user_lives = 6
+
     #initialise string to hold successfully guessed letters in the secret_word
     letters_guessed = []
+
     #initialise a string which holds the character for user's guess
     user_guess = ""
+
     #set variable to hold output for get_guessed_word()
     display_current = get_guessed_word(secret_word, letters_guessed)
 
@@ -148,10 +169,13 @@ def hangman(secret_word):
 
     #take length of secret word as an int and save to string_length
     string_length = len(secret_word)
+
     #message informing of length of word to be guessed
     print(f"\n\nYour opponent has selected a random word which is {string_length} characters long.")
+
     #enter while loop which will exit when user_lives is less than or equal to 1
     while user_lives > 1:
+
         #increment the user_attempts int value
         user_attempts +=1
 
@@ -162,7 +186,7 @@ def hangman(secret_word):
         print("\n",get_guessed_word(secret_word, letters_guessed))
 
         print("\n\nThe range of letters which have not been guessed are as follows:\n")
-        print(get_available_letters(letters_guessed))
+        print(avail_letters)
         #intialise exit condition for while
         guess_ok = False
         #set up while with above bool variable as exit condition
@@ -177,10 +201,14 @@ def hangman(secret_word):
             elif user_guess not in string.ascii_lowercase:
                 #error message
                 print("\n\nGuess was not a recognised letter, try again (ensure lowercase)...")
+
             else:
                 #debug to show that else is triggered
-                print("*debug*Guess is ok.")
+                # print("*debug*Guess is ok.")
+
+                #.append() letters_guessed with user_guess if verification of entry has been passed
                 letters_guessed.append(user_guess)
+
                 #activate while exit condition
                 guess_ok = True
         #conditional for if guessed char is within the secret_word
@@ -189,15 +217,19 @@ def hangman(secret_word):
             print(f"\n\nThe guess {user_guess} is a letter in the target word!")
             #if is_word_guessed return value evaulates to true (all chars in word are successfully guessed)
             if is_word_guessed(secret_word, letters_guessed) == True:
-                #if
                 print(f"\n\nWell done you have successfully guessed the word {secret_word}!\nIt took you {user_attempts} attempts.")
                 break #use exit() or break??
         else:
-            print(f"\n\nUnlucky, the guess {user_guess} is not a letter in the target word")
+            print(f"\n\nThe guess {user_guess} is not a letter in the target word")
             user_lives -= 1
+        #debug
+        # print(f"Here are all letters guessed so far: {letters_guessed}")
 
-    #message of comiseration if user runs out of guesses
-    print("Unlucky, you ran out of guesses....")
+        #debug to check output of get_available letters before while loops
+        # print("End of loop, available letters: ", get_available_letters(letters_guessed), "letters_guessed: ", letters_guessed)
+
+    #comiseration if user runs out of guesses
+    print(f"Unlucky, you ran out of guesses.... The secret word was {secret_word}\n\n")
 
 
 secret_word = choose_word(wordlist)
