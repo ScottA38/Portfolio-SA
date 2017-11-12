@@ -61,36 +61,51 @@ def word_freq_dict(song_name):
     #return list of all word matches within the lyrics string
     word_list = re.findall(word_match, song_name)
 
-    print(" ")
-    print(" ")
-    print(word_list)
+
+    print(f"\n\n {word_list}")
     #set a variable to hold the 'set' (all unique values) in a list
     word_set = set(word_list)
 
     #convert word_set beck to a list and reassign to itself
     word_set = list(word_set)
 
-    kind = type(word_list)
-    #debug: print output of word_list
-    print(f"word_list's data type is {kind}")
-    # print(word_list)
+    #debug by printing output of word_set
+    print(f"word_set is: {word_set}")
 
+    #debug to show output of word_list
+    print(f"word_list is: {word_list}")
 
+    #debug: print type output of word_list
+    # print(f"word_list's data type is {type(word_list)}")
+
+    # iterate through all items in word_set (unique words in the song)
     for item in word_set:
 
+        #debug loop count for nested for loop
+        loop_count = 0
+
+        #debug to check what words from word_set the first for loop is iterating over
         print("This item in word_set is: ", item)
 
         #intiate an int value to index the amount of times 'if' tests true within nested for loop
         freq_count = 0
 
-        #initiate nested for to iterate through the list of stored
-        #this is using nested for to search for matches of 1 list item x number of times in another - is there a predefined function to do this?
+        #this is using nested for to search for the iteration variable in the first for loop within the items of word_list
         for wrd in word_list:
+
+            #debug loop count increment
+            loop_count += 1
+
+            #debug to check what is going on in nested for loop
             #conditional for equivalent strings when converted to lowercase
             if wrd is item:
+                #debug to ouput that 'if' has triggered
+                print(f"If' triggered!")
                 #increment inde value by 1 if the target word is found within the lyrics
                 freq_count += 1
-                print(wrd + str(freq_count))
+            #debug to return status indicators of nested 'for'
+            print(f"Nested loop count = {loop_count}, current word in word_list = {wrd}, current freq_count = {freq_count}")
+
         #save index number and corresponding word to dict
         freq_dict[item] = freq_count
 
