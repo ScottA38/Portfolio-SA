@@ -1,5 +1,10 @@
 """
-Program to analyse song lyrics.
+N.B to future users of program - this program uses argv, so when intialising in terminal/powershell use the name
+of the file to be parsed minus the file type suffix after the script name - only '.txt' will be accepted for program
+
+i.e: > python ex16.py Lyrics1
+
+** Program to analyse song lyrics. **
 
 1) Open a .txt file and read() contents to a string (song lyrics)
 
@@ -14,25 +19,34 @@ Program to analyse song lyrics.
 4)iterate through the unique values in the list with set() applied, and through a nested iteration within this loop to check how many times the unique list item
     matches with all the words in the song (from return of 3))
 
-5)For each match of a string value from the unique list within the full list of lyric word items increment a frequency count by 1
-    Make sure this frequency count is reset to 0 for each new unique word (each new iteration of the 1st for loop - non-nested)
+5)For each match between the unique list of words to an item within the the full list of lyric word items increment a frequency count by 1
+    Make sure the frequency count corresponding to a specific unique word is reset to 0 when a new unique word is called (next iteration loop)
 
-6) Each time the nested for loop completes save the results to the dict as empty_dict[unique_word] = frequency_count
+6) Each time the nested for loop completes, (full lyrics in song checked) save the results to the dict as empty_dict[unique_word] = frequency_count
+
+7) Using returned frequency dict find maximum possible frequency count for a single word by calling max(freq_dict.values()) and assigning to a variable
+
+8) When the variable is returned run this through the min_freq() function which will return a tuple of tuple pairs where each tuple pair is a list of words and a frquency value
+    The words in the list all share the same frequency as the frequency shown the second part of that tuple pair
+    - In this instance the input is the maximum possible frequency, therefore only one maxmium frequency tuple pair will be returned
+
+9) Take user input via take_input function to gain an integer within the range of the possible word frequencies
+
+10) Run the min_freq() function once more with the user input as the argument, returning tuple pairs for all frequencies above or equal to the number specified
+
 
 Objectives:
 
 Initially the program will analyse the frequency of each unique word, saving the string
 - number pair in a dictionary each time
 
-The program should also find the 'mode' word/s (or most frequent word) -storing in a list
-
-The program should also return a tuple containing the list
-mentioned above and the frequency.
+The program should also find the 'mode' word/s (or most frequent word)
+-storing the words in a list and returning a ([list], frequency) tuple.
 
 A secondary function of the script is to ask for a user input (int only).
 
 Following this input a list should be returned and printed to screen of tuple pairs:
-(words_for_freq, freq_int). Only lyrics with a frequency count higher than the user input should
+([words_which_match_frequency], frequency). Only lyrics with a frequency count higher than or equal to the user input should
 be output to screen for this.
 
 Information required:
@@ -68,12 +82,12 @@ def take_input(subject, max_no):
     #intiate while loop with open condition (infinite)
     while True:
         try:
-            #take user input as an integer
             usr_num = int(input("\nPlease enter a minimum {} frequency number: ".format(subject)))
-            if (usr_num > max_no | usr_num < 0):
+            #conditional to trigger if integer input is not in range of possible frequencies
+            if usr_num not in range(0, max(out.values())):
                 #giving user notification of the fault
                 print("\nPlease enter a number within the range of: 0 and {max_no}")
-                #technically not necessary
+                #not necessary?
                 continue
             else:
                 return usr_num
@@ -159,7 +173,7 @@ def word_freq_dict(song_name):
         #increment intial loop's count
         loop_count += 1
 
-        print(f"loop_count = {loop_count}")
+        #print(f"loop_count = {loop_count}")
 
     return freq_dict
 
