@@ -142,7 +142,7 @@ def word_freq_dict(song_name):
             if item == word_list[nested_count]:
 
                 #debug to ouput that 'if' has triggered
-                print(f"If' triggered!")
+                #print(f"'If' triggered!")
 
                 #increment inde value by 1 if the target word is found within the lyrics
                 freq_count += 1
@@ -168,32 +168,42 @@ def min_freq(min_int):
 
     #debug of input arg
     print(f"\n\nmin_int = {min_int}")
-    #initiate an empty list to hold return values
-    flist = []
 
     #intialise an empty tuple for holding ([list], freq) pairs
     out_tup = ()
 
-    #iterate over the keys of 'out' dict, incrementing an int value by 1 each time and hoping to get the right answer
-    for i, word in enumerate(out.keys()):
-        #debug to check loop variables
-        print(f"the current freq_iterable is: {freq_iterable} and word is {word}.\n\nout[word] = {out[word]}")
+    #assign the input argument to the freq_iterable variable (integer value for the minimum acceptable frequency associated with a lyric word)
+    freq_iterable = min_int
 
-        #conditonal to check whether the loop has iterated through to higher than the maximum possible frequency value
-        if freq_iterable > max(out.values()):
-            return out_tup
+    #condition is that pre-set input integer does not exceed the value of the highest frequency in the generated dict (will be incremented)
+    while freq_iterable <= max(out.values()):
 
-        #check to see if current key value word has a corresponding frequency EQUAL TO frequency_iterable
-        elif out[word] == freq_iterable:
-            #debug to see if conditional triggers and
-            print(f"{word} matches count of freq_iterable!")
-            flist.append[word]
+        #initiate an empty list to hold return values for this specific freq_iterable integer
+        flist = []
 
-        #concatenate the list of words for the given frequency to the original out_tup
-        out_tup = out_tup + (flist, freq_iterable)
+        #iterate over the keys of 'out' dict, incrementing an int value by 1 each time and hoping to get the right answer
+        for i, word in enumerate(out.keys()):
 
-        #increment freq_iterable by 1
-        freq_iterable +=1
+            #debug to check loop variables
+            #print(f"the current freq_iterable is: {freq_iterable} and word is {word}.\nout[word] = {out[word]}")
+
+            #check to see if current key value word has a corresponding frequency EQUAL TO frequency_iterable
+            if out[word] == freq_iterable:
+                #debug to see if conditional triggers by printing a statement as an output
+                print(f"{word} matches count of freq_iterable!")
+                #add
+                flist.append(word)
+
+        if len(flist) > 0:
+            #concatenate the list of words for the given frequency to the original out_tup
+            out_tup = out_tup + (flist, freq_iterable)
+        else:
+            #statement output for debugging to check if no values were appended
+            print("No word frequencies matched this time!")
+
+        #increment frequency_iterable
+        freq_iterable += 1
+
     return out_tup
 
 
@@ -213,3 +223,9 @@ print(max_tuple)
 
 #call function to take input from user as integer for minimum frequency
 user_int  = take_input("lyric", max(out.values()))
+
+#call min_freq function again to return tuple pairs of "[lyric-word-list]: frequency" where the frequency is consistently above the user input integer (use input integer from user as argument)
+usr_tuples = min_freq(user_int)
+
+#print output of min_freq() for user-inoputted minimum frequency value
+print(usr_tuples)
