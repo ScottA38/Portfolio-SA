@@ -1,19 +1,22 @@
 class Fraction(object):
+    #list of possible actions to perform on an initially created list
+    ops = {'add': "+", 'subtract': "-", 'multiply': "*", 'divide': "/", 'invert':"", 'decimalise':""}
 
     #create an init file
     def __init__(self, num, denom):
+        #assign instance variables to ordinary identifiers for easy reference
         self.num = num
         self.denom = denom
 
-    def __str__(self):
-        """
-        create output if class object is called to a 'print' function
-        """
-        print(denom + "/" + num)
+        #collect a simplified version of the fraction entered by calling simplifyFraction()
+        out_num, out_denom = self.simplifyFraction(num)
+
+        #*debug* test that the simplifyFraction() function is returning a reasonable result
+        print(f"The best simplification of {num}/{denom} is {out_num}/{out_denom}.")
 
     def newInput(subject, binary):
         """
-        modular function to take int input from the user
+        modular function to take int input from the user & validate it before returning the value
         """
         var = None
         while True:
@@ -37,28 +40,38 @@ class Fraction(object):
         denom_1 = var_denom * denom
         return (num_1, num_2, denom_1)
 
-    def simplifyFraction(hcf, num, denom):
+    def simplifyFraction(self, hcf):
         """
         Use a recursion process to find the highest common factor between a numerator and denominator
-        in order to factorise
+        in order to factorise.
+
+        When calling this function the 'hcf' argument should be the same as the numerator argument. This will mean that if the
+        numerator is 1 the 1st base case 'hcf <= 1' is caught
         """
         #if the hcf number has reached 1 or below then the process has failed and returning false
         #provides evidence of that instead of returning a number (this is a base case)
         if hcf <= 1:
-            return False
+            #return standard numerator (no common factors)
+            return self.num, self.denom
 
         print(f"case {hcf} (descending)")
         #specify a base case where both numbers are directly divisible by the hcf variable
         #second base case (?)
-        if (denom % hcf == 0) & (num % hcf == 0):
+        if (self.num % hcf == 0) & (self.denom % hcf == 0):
             print("hcf found!")
-            return hcf
+            return (int(self.num/hcf), int(self.denom/hcf))
 
         #decrement 'i' variable
         hcf -= 1
 
         #call the same function as a subfunction
-        return commonFactor(hcf, num, denom)
+        return self.simplifyFraction(hcf)
+
+    def __str__(self):
+        """
+        create output if class object is called to a 'print' function
+        """
+        return(f"{self.num} / {self.denom}")
 
     def __add__(self, var_num, var_denom):
         """
@@ -70,13 +83,7 @@ class Fraction(object):
         #perform addition operation on numerator
         num += add_num
 
-        #assign the highest common factor of fractions to 'div'
-        div = simplifyFraction(num, num, denom)
-        if not div:
-            return Fraction(num, denom)
-        else:
-            #division on found hcf for fraction (num and denom) and return into new fraction instance
-            return Fraction(int(num / div), int(denom / div))
+        return Fraction(num, denom)
 
     def __sub__(self, var_num, var_denom):
         """
@@ -88,14 +95,8 @@ class Fraction(object):
         #perform operation
         num -= sub_num
 
-        #call simplifyFraction to find hcf of num and denom
-        div = simplifyFraction(num, num, denom)
-        if not div:
-            #return new fraction object
-            return Fraction(num, denom)
-        else:
-            #divide numerator and denominator by hcf and give as int for new Fraction object
-            return Fraction(int(num / div), int(denom / div))
+        #divide numerator and denominator by hcf and give as int for new Fraction object
+        return Fraction(num, denom)
 
 
     def __mul__(self, var_num, var_denom):
@@ -106,13 +107,7 @@ class Fraction(object):
         num *= var_num
         denom *= var_denom
 
-        #call simplifyFraction
-        div = simplifyFraction(num, num, denom)
-        #catch if simplifyFraction returns False
-        if not div:
-            return Fraction(num, denom)
-        else:
-            return Fraction(int(num / div), int(num / div))
+        return Fraction(num, denom)
 
     def __div__(self, var_num, var_denom):
         """
@@ -122,13 +117,7 @@ class Fraction(object):
         num *= var_denom
         denom *= var_num
 
-        #call simplifyFraction
-        div = simplifyFraction(num, num, denom)
-        #conditonals to catch if simplifyFraction returns false
-        if not div:
-            return Fraction(num, denom)
-        else:
-            return Fraction(int(num / div), int(num / div))
+        return Fraction(num, denom)
 
 
     def __float__(self):
@@ -143,3 +132,53 @@ class Fraction(object):
         """
         #allowed because arguments only respect order or csvs, not identifiers
         return Fraction(denom, num)
+
+
+def create():
+    #take int input from the user using predefined functions for numerator and denominator
+    num = Fraction.newInput("numerator", False)
+    denom = Fraction.newInput("denom", False)
+
+    #return simplified num and denom class instance
+    return Fraction(num, denom)
+
+def startUp():
+
+    print("Welcome - this is a program to create and manipulate fractions in Python.\nPlease follow the instructions below:")
+
+    #intiate exit clause (boolean)
+    exit_clause = False
+
+    #to allow this segment of function to run on loop until the user specifies to stop
+    while exit_clause == False:
+
+        #create() to create first fraction object
+        one = create()
+
+        print("Your fraction is: ", one)
+
+        print("What would you like to do with the fraction? Options are provided in the list below: ")
+
+        #iterate over enumerated list of strings to display options
+        for i, value in enumerate(Fraction.ops.keys()):
+            print(f"[{i}]: {value} your fraction.")
+
+        while True:
+            print("Please select from the list by giving a corrseponding decimal number.")
+            #take input via function
+            entry = Fraction.newInput("choice", False)
+            if entry not in range(0, len(Fraction.ops)):
+                #error message to user
+                print("Input out of range of options list, please try again.")
+            break
+
+
+        #inform user of action to be taken and input expected
+        print("Do you want to continue? type '1' for yes and '0' for no below:")
+
+        if Fraction.newInput("exit decision", True) == 0:
+            break
+        else:
+            print("Continuing...")
+
+startUp()
