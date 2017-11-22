@@ -20,14 +20,14 @@ def commonFactor(hcf, num, denom):
     #if the hcf number has reached 1 or below then the process has failed and returning false
     #provides evidence of that instead of returning a number (this is a base case)
     if hcf <= 1:
-        return False
+        return 1
 
-    print(f"case {hcf} (descending)")
+    print(f"Case {hcf} (descending)")
     #specify a base case where both numbers are directly divisible by the hcf variable
     #is this a second base case?
-    if (denom % hcf == 0) & (num % hcf == 0) & (hcf >= num):
+    if (denom % hcf == 0) & (num % hcf == 0):
             print("hcf found!")
-            return hcf
+            return (int(num/hcf), int(denom/hcf))
 
     #decrement 'i' variable
     hcf -= 1
@@ -49,17 +49,13 @@ def startUp():
         num = newInput("numerator", False)
         denom = newInput("denom", False)
 
-        #find the lower of the 2 values as a starting point for decrementing hcf search
-        hcf = min(num, denom)
+        #use predefined function to calculate the highest common factor (if any).
+        #Substitute the numerator as the intial 'hcf' variable
+        out_num, out_denom = commonFactor(num, num, denom)
 
-        #use predefined function to calculate the highest common factor (if any)
-        out = commonFactor(, num, denom)
+        #represent result in print statement
+        print(f"The best simplification of {num}/{denom} is {out_num}/{out_denom}.")
 
-        if not out:
-            print(f"There is no common factor for the numerator {num} and denominator {denom} (besides 1).")
-
-        else:
-            print(f"The highest common factor of {num} and {denom} is {out}.")
         #inform user of action to be taken and input expected
         print("Do you want to continue? type '1' for yes and '0' for no below:")
 
