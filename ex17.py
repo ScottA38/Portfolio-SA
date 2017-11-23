@@ -78,7 +78,7 @@ def startUp():
 
         if entry > 3:
             #call oper function to execute operation, but set 2nd argument to None because it is not required and should not be called in the logic flow for 'ntry > 3'
-            oper(operation, None)
+            operand_1.oper(operation, None)
 
         #inform user of action to be taken and input expected
         print("Do you want to continue? type '1' for yes and '0' for no below:")

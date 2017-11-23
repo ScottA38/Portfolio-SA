@@ -22,10 +22,13 @@ class Fraction(object):
     def commonDenom(self, operand):
         """
         find commmon denominator by multiplying denominators of fractions together and adjusting numerator values accordinglys
+
+        Even 'self' attributes have to be assigned called via the 'self' instance: self.num | self.denom because the variables of just 'num' | 'denom' are
+        only available in the __init__() scope where they are defined. They could be defined again (if desired) for each method for easy referencing
         """
-        num_1 = operand.denom * num
-        num_2 = denom * operand.num
-        denom_1 = operand.denom * denom
+        num_1 = operand.denom * self.num
+        num_2 = self.denom * operand.num
+        denom_1 = operand.denom * self.denom
         return (num_1, num_2, denom_1)
 
     def simplifyFraction(self, hcf):
@@ -33,10 +36,9 @@ class Fraction(object):
         Use a recursion process to find the highest common factor between a numerator and denominator
         in order to factorise.
 
-        When calling this function the 'hcf' argument should be the same as the numerator argument. This will mean that if the
-        numerator is 1 the 1st base case 'hcf <= 1' is caught
-
-        Issue: Python doesn't recognise these object attributes of self like 'num' and 'denom' unless they have self. before them, but has done previously?
+        When calling this function the 'hcf' argument should be the same as the numerator argument, making sure that it does not recurse over values which are
+        higher than the numerator (will never be hcf: do not accept top-heavy fractions). Also if the
+        numerator entered for hcf is 1 the 1st base case 'hcf <= 1' is caught
         """
         #if the hcf number has reached 1 or below then the process has failed and returning false
         #provides evidence of that instead of returning a number (this is a base case)
@@ -91,28 +93,25 @@ class Fraction(object):
         if operation == "inversion":
             #inform user of action to be taken
             print(f"Here is the {operation} of {self}:")
-            res = inversion(self)
+            res = self.inversion()
             res.output()
 
         if operation == "decimalisation":
             #inform user of action being taken
             print(f"Here is the {operation} of {self}:")
             res = float(self)
-            res.output()
+            print(f"The decimalised value is: {res}")
 
     def output(self):
         """
         modular function to output fraction result of operation performed and then print simplified fraction
         """
-        #initilaise simplified fraction variables to be printed
-        res_num = 0
-        res_denom = 0
 
-        #show user unsimplified result of operation
-        print(f"The unsimplified result is {res}")
+        #show user unsimplified result of operation by calling base 'print' method of Fraction class
+        print(f"The unsimplified result is {self}")
 
-        #simplify result of fraction (output will be new fraction object)
-        res = res.simplifyFraction(res.num)
+        #simplify result of fraction (output will be new fraction object), has to reference self to get num and denom attributes
+        res = self.simplifyFraction(self.num)
         #print simplified result
         print(f"The simplified result is {res}")
 
@@ -126,8 +125,8 @@ class Fraction(object):
         """
         class method for add operator (only works with other fractions)
         """
-        #unpack the variables of commonDenom
-        num, add_num, denom = commonDenom(operand.num, operand.denom)
+        #unpack the variables of commonDenom. commonDenom will not be redognised unless attached to an instance of class such as 'self' or 'Fraction'
+        num, add_num, denom = self.commonDenom(operand)
 
         #perform addition operation on numerator
         num += add_num
@@ -139,9 +138,9 @@ class Fraction(object):
         base method for subtracting current fraction by a variable
         """
         #common denom & modify numerators acordingly
-        num, sub_num, denom = commonDenom(operand.num, operand.denom)
+        num, sub_num, denom = self.commonDenom(operand)
 
-        #perform operation
+        #perform operation - no instances of calling self.num required here (i think)
         num -= sub_num
 
         #divide numerator and denominator by hcf and give as int for new Fraction object
@@ -153,30 +152,30 @@ class Fraction(object):
         base method for multiplying current fracton by a variable
         """
         #multiply numerators and denominators together
-        num *= operand.num
-        denom *= operand.denom
+        self.num *= operand.num
+        self.denom *= operand.denom
 
-        return Fraction(num, denom)
+        return Fraction(self.num, self.denom)
 
     def __div__(self, operand):
         """
         base method for dividing current fraction by a variable
         """
         #multiply each numerator with denominator of other fraction for division
-        num *= operand.denom
-        denom *= operand.num
+        self.num *= operand.denom
+        self.denom *= operand.num
 
-        return Fraction(num, denom)
+        return Fraction(self.num, self.denom)
 
     def __float__(self):
         """
         base method for defining a floating point number from the current num and denom
         """
-        return float(num / denom)
+        return float(self.num / self.denom)
 
     def inversion(self):
         """
         method to inverse num and denom ints and return new fraction instance
         """
         #allowed because arguments only respect order or csvs, not identifiers
-        return Fraction(denom, num)
+        return Fraction(self.denom, self.num)
