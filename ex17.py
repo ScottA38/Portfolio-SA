@@ -11,14 +11,14 @@ def newInput(subject, binary):
     var = None
     while True:
         try:
-            var = int(input("Please enter a desired integer value here for your {} ->".format(subject)))
+            var = int(input("\nPlease enter a desired integer value here for your {} ->\n".format(subject)))
             if binary == True:
                 if (var > 1) | (var < 0):
-                    print("The integer input was out of the range of binary digits (please enter either 1 or 0).")
+                    print("The integer input was out of the range of binary digits (please enter either 1 or 0).\n")
                     var = None
             break
         except:
-             ValueError('The data received was not of the correct type, please try again.')
+             ValueError('The data received was not of the correct type, please try again.\n')
     return var
 
 def create():
@@ -36,7 +36,7 @@ def startUp():
     """
     Class which encompasses entire program cycle
     """
-    print("Welcome - this is a program to create and manipulate fractions in Python.\nPlease follow the instructions below:")
+    print("\nWelcome - this is a program to create and manipulate fractions in Python.\nPlease follow the instructions below:\n")
 
     #intiate exit clause (boolean)
     exit_clause = False
@@ -47,7 +47,7 @@ def startUp():
         #create() to create first fraction object, save to operand_1
         operand_1 = create()
 
-        print("Your fraction is: ", operand_1)
+        print("\nYour fraction is: ", operand_1,"\n")
 
         print("What would you like to do with the fraction? Options are provided in the list below: ")
 
@@ -62,17 +62,22 @@ def startUp():
             if entry not in range(0, len(Fraction.ops)):
                 #error message to user
                 print("Input out of range of options list, please try again.")
-            #and index into list using this value to assign a string such as 'add' to 'entry'
-            operation = Fraction.ops[entry]
-            break
+            else:
+                #and index into list using this value to assign a string such as 'add' to 'entry'
+                operation = Fraction.ops[entry]
+                break
 
         if entry <= 3:
+
             print("Please follow the instructions to give a 2nd fraction with which to perform the operation.\n")
+
             #gather int inputs for numerator and denominator of arithmetic operation using newInput()
             oper_num = newInput("operand numerator", False)
             oper_denom = newInput("operand denominator", False)
+
             #create a new fraction object with identifier 'operand'
             operand_2 = Fraction(oper_num, oper_denom)
+
             #call function oper() to perform arithmetic operation
             operand_1.oper(operation, operand_2)
 
