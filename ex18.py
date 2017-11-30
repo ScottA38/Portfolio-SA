@@ -26,9 +26,6 @@ def attrEntry(attr_name):
     #intialise a boolean exit condition to upcoming while loop
     exit_state = False
 
-    #intialise variable for flagging if string has any illegal characters (break out if fault found with word)
-    verif = True
-
     #create loop for program execution unless exit specified by user
     while exit_state == False:
 
@@ -42,6 +39,9 @@ def attrEntry(attr_name):
         # print(f"List of accepted characters is '{setVals()}'")
         #ask if string matched inside of stored string for attr_type
         if "str" in attr_type:
+            #intialise variable for flagging if string has any illegal characters (break out if fault found with word)
+            verif = True
+
             #iterate through characters in input string
             for char in new_attr:
                 #debug
