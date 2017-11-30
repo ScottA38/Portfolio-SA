@@ -20,7 +20,7 @@ def commonFactor(hcf, num, denom):
     #if the hcf number has reached 1 or below then the process has failed and returning false
     #provides evidence of that instead of returning a number (this is a base case)
     if hcf <= 1:
-        return 1
+        return (num, denom)
 
     print(f"Case {hcf} (descending)")
     #specify a base case where both numbers are directly divisible by the hcf variable
