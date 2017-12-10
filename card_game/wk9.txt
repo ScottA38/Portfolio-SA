@@ -1,0 +1,95 @@
+Task outline:
+
+      Consider the game of poker (the variant does not matter)
+
+      Break down the elements into objects that you could represent with classes.
+
+      As a starting point think about:
+
+              a card
+              the deck of cards
+              a hand of cards (or the player who holds the hand). (player/deck  - a dict would not surfice unless reused as multiple different hands need to be dealt)
+
+      How would you represent each of those objects?
+
+      What are their attributes?  card: suit, face value
+
+      What data do they need to hold? What methods? How might you sensibly represent the data?
+      Write code to represent each object as a class, build a small application that will “deal” a hand of 5 cards objects.
+
+      It should print each hand to the console in a sensible format,
+
+      Then allow another hand to be dealt, continuing through until there are not enough cards left in the deck.
+
+
+      The deck should be shuffled at the start of the process (and again if all cards are dealt out).
+
+      Consider how you might shuffle the deck, what approaches might you take to organise your list of cards into a random order?
+
+      Your code should be commented to explain your thinking about each step of the process.
+
+      Write some test functions that demonstrate that your classes work as expected.
+
+
+
+
+
+
+Objective:
+
+      -Create a game of poker with cards simplified as a individual objects that can hold attributes
+
+      -Create 52 card deck of card objects (from 1st step) (without jokers)
+
+      -Create an algorithm (integrated into the object or otherwise) which deals 5 random cards to the user to simulate being dealt a hand in a card
+
+      -Write a functions to test:
+
+            -That the user gets dealt x amount of cards - player class
+
+            -To check that the same card is not dealt twice to the user within the same hand (error-checking the dealing function) - cardIter()
+
+            -That there are no duplicate cards in the deck instantiated (represented) by the program - player class method
+
+            -Check that each card has a recognised string for suit - cardIter()
+
+            -Check that each card has a recognised character/string for face value -cardIter()
+
+            -Simulate x number of hands and measure the frequency of the face values of cards which are dealt to ensure that a relatively even distribution is given
+
+        -comment all functions explaining intentions for critical operations
+
+
+  Objects
+
+  -class for card
+  -attributes: suit, face value, shuffle_int (random integer)
+
+  -player class
+    -object attributes
+      - 'hand' list (holds key of deck object's deck_dict, can reference other attributes by)
+    -test methods:
+      -whether the hand is the correct in length, and whether there are duplicate cards
+
+
+  -create a deck class
+    -class attributes:
+	card_names - a tuple with all names of objects 
+	(COULD change this to a dict and have Random module add a corresponding random number as a positional value in the deck for each card within the 	deckOCards() method - Chris’ low consumption solution)
+
+    -object attributes:
+      -tuple called orig_deck with names of all card objects in sequence
+      -list called current_deck which will hold all card objects not currently dealt
+
+    -contain methods to check: 
+		length of global class dict is length 52, 
+		check that an individual object dict has an item removed each time that a hand is dealt
+
+
+
+  intended steps:
+    1) create a tuple of strings with all suit names - suit_name
+    2) create a tuple of strings with all card face values - face_name
+    3) create variable to control index of while loop - for_var = 0
+    4) initiate while loop for condition for_var < 4
+      5) intiate for loop to iterate over
