@@ -1,11 +1,12 @@
 """
 Seperate script for ex19.py to  reference test functions which don't require 'self'
 """
-def checkFaceVals(lst):
+def checkFaceVals(lst, debug_prints):
     """
     test function to check for inconsistencies in data values for variables holding card face value names"""
     #debug
-    print(f"Input list displays as {lst}")
+    if debug_prints:
+        print(f"Input list displays as {lst}")
     #check each value of the input list iteratively
     assert lst == ("1", "2", "3", "4", "5", "6", "7", "8", "9", "Jack", "Queen", "King", "Ace"), "Values for base data list not displaying as expected"
     return True

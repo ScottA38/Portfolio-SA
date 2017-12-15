@@ -1,6 +1,7 @@
 from random import shuffle
 from ex19_tests import *
 import string
+import copy
 
 class Deck(object):
     #create a dict to store an 'object name': 'attribute value tuple' pair
@@ -14,14 +15,16 @@ class Deck(object):
 
         Deck.deckOCards(self, suit_name, face_val, debug_prints)
 
-        #convert tuple to list such that it is mutable when using methods
-        self.deck = list(self.cards[:])
+        #save self.cards to tuple and save to deck
+        deck = self.cards[:]
+
+        deck = list(self.cards)
 
         #randomise the order of the given deck
-        self.shuffleThePack()
+        self.shuffleThePack(deck)
 
         #convert back to tuple so that the data is not mutable unless specified
-        self.deck = tuple(self.deck)
+        self.deck = tuple(deck)
 
     def __str__(self):
         out_tup = ()
@@ -29,8 +32,8 @@ class Deck(object):
             out_tup += (card,)
         return out_tup
 
-    def shuffleThePack(self):
-        shuffle(self.deck)
+    def shuffleThePack(self, deck):
+        shuffle(deck)
 
     def deckOCards(self, suit_name, face_val, debug_prints):
         """
@@ -48,23 +51,24 @@ class Deck(object):
         while for_var < 4:
             for suit in suit_name:
                 for value in face_val:
-                    #attribute output for each card (debug)
-                    print(f"face_val = {value}, suit_name = {suit}")
                     #add tuple to cards
                     self.cards += (Card(value, suit),)
+                    #print card data to screen if debug_prints is True
+                    if debug_prints:
+                        print(card)
                     nested_var += 1
                 for_var += 1
 
 
-    def deckCheck(self, debug, debug_prints):
+    def deckCheck(self, flag, debug_prints):
         """
         Test function to try and verify the consistency of object data within the deck.
         boolean argument 'flag' to denote whether to check instance.deck or Deck.cards
         """
         #by using 'types' module assert that 'flag' input is boolean ------ cannot get to work!! (Does not recognise BooleanType (NameError))
-        # assert type(debug) == BooleanType
+        # assert type(debug) == "<class 'bool'>"
         #check to see via boolean 'obj' variable whether the user wants to check the instance's deck or the class' deck
-        if debug:
+        if flag:
             #if test of input boolean argument determines True specify deck attribute as the object instance's tuple
             deck = self.deck
         else:
@@ -74,7 +78,7 @@ class Deck(object):
         #test if the length of the tuple is 52 items long (52 card deck), if not raise assertion error
         assert len(deck) == 52, "Amount of cards within given deck is incorrect, 52 expected {} receieved.".format(len(deck))
         #call test function to verfiy the data for card objects within the deck
-        cardIter(self.deck, debug_prints, suit_name, face_val)
+        cardIter(deck, debug_prints, suit_name, face_val)
         return True
 
 
@@ -99,13 +103,13 @@ class Hand(object):
         """
         self.hand = ()
         #call the makeHand function with the input argument dack instance
-        makeHand(deck_inst)
+        self.makeHand(deck_inst)
 
     def __str__(self):
-        out_tup = ()
+        out_str = ""
         for card in self.hand:
-            out_tup += (card,)
-        return out_tup
+            out_str += "{}\n".format(card)
+        return out_str
 
     def makeHand(self, deck_in):
         """
@@ -113,21 +117,20 @@ class Hand(object):
         """
         #initialise a variable for pciking a card from the deck
         pick_card = 0
-
         #assign the deck's list to a temporary variable
         while len(self.hand) < 6:
 
             #take a card from the input Deck instance and append it to the 'hand' tuple
-            self.hand += deck_in.deck[pick_card]
+            self.hand += (deck_in.deck[pick_card],)
 
             #convert self.deck to list and save to variable
             deck_lst = list(deck_in.deck)
 
             #remove this card from the current deck instance such that it cannot be re-picked within the given deck instance
-            deck_lst.remove(pick_card)
+            deck_lst.remove(deck_lst[pick_card])
 
             #overwrite the original <deck_instance>.deck with the new modified tuple
-            deck_in.setattr("deck", tuple(deck_lst))
+            setattr(deck_in, "deck", tuple(deck_lst))
 
             #increment index of for loop
             pick_card += 1
@@ -147,7 +150,7 @@ def generateFaceVals(royalty, face_val):
 debug = True
 
 #flag whether test functions should output a print statement
-debug_prints = True
+debug_prints = False
 
 #attribute base data
 suit_name = ("Hearts", "Diamonds", "Spades", "Clubs")
@@ -157,7 +160,7 @@ face_val = generateFaceVals(royalty, face_val)
 
 #check the face_val list to ensure correct values
 if debug:
-    checkFaceVals(face_val)
+    checkFaceVals(face_val, debug_prints)
 
 deck1 = Deck(suit_name, face_val, debug_prints)
 
@@ -170,6 +173,4 @@ if debug:
 
 hand1 = Hand(deck1)
 
-print(hand1)
-
-print(hand1)
+print(f"Your dealt hand is:\n {hand1}")
