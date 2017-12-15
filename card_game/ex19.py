@@ -1,50 +1,80 @@
 from random import shuffle
-import ex19_tests
-from types import *
+from ex19_tests import *
+import string
 
 class Deck(object):
-    card_names = ()
-    def __init__(self):
-        #intialise an empty tuple to store all card names in - note: needs to be populated in order to be able to use - *test this*
-        self.deck = ()
+    #create a dict to store an 'object name': 'attribute value tuple' pair
+    def __init__(self, suit_name, face_val, debug_prints):
+        """
+        create list to store all card names in for current version of a deck instance - note: needs to be populated in order to be able to use.
+        Python console tests show that there is no need to clone the Deck.card_names data here in order to have data as independent of each other
+        """
+        #intialise an empty tuple to hold each object instance for cards
+        self.cards = ()
 
-    def deckOCards(self):
-        """Nested iteration through card attribute base data:
-        create unique names by concatenating base data values,
-        create object of Card for each iteration utilising iterated base data as attribute values.
-        Create an item in card_names of each object name created"""
+        Deck.deckOCards(self, suit_name, face_val, debug_prints)
+
+        #convert tuple to list such that it is mutable when using methods
+        self.deck = list(self.cards[:])
+
+        #randomise the order of the given deck
+        self.shuffleThePack()
+
+        #convert back to tuple so that the data is not mutable unless specified
+        self.deck = tuple(self.deck)
+
+    def __str__(self):
+        out_tup = ()
+        for card in self.deck:
+            out_tup += (card,)
+        return out_tup
+
+    def shuffleThePack(self):
+        shuffle(self.deck)
+
+    def deckOCards(self, suit_name, face_val, debug_prints):
+        """
+        nested iteration through suit_name and face_val card attribute base data:
+
+        create object of Card for each iteration, include iterated data as attributes in created object.
+
+        Create an item in card_names of each object name created
+        """
+        #initialise while loop manual indexes
         for_var = 0
         nested_var = 0
+
+        #nested iteration
         while for_var < 4:
             for suit in suit_name:
                 for value in face_val:
-                    print(f"face_val = {value}, suit_name = {suit})
-                    #concatenated for_var and nested_var in a string (separated by an underscore)
-                    Deck.card_names += (str(for_var) + "_" + str(nested_var))
-                    #create the card object for this specific case, with the name being referenced from Deck.card_names (name will be dyamically replaced by compiler)
-                    Deck.card_names[-1] = Card(value, suit)
-                    #increment nested_var for each nested iteration
+                    #attribute output for each card (debug)
+                    print(f"face_val = {value}, suit_name = {suit}")
+                    #add tuple to cards
+                    self.cards += (Card(value, suit),)
                     nested_var += 1
-            for_var += 1
+                for_var += 1
 
-    def deckCheck(self, obj):
+
+    def deckCheck(self, debug, debug_prints):
         """
         Test function to try and verify the consistency of object data within the deck.
-        Written with boolean argument to denote whether checking instance's deck attribute or Deck class' card_names attribute
+        boolean argument 'flag' to denote whether to check instance.deck or Deck.cards
         """
-        assert type(obj) == BooleanType
+        #by using 'types' module assert that 'flag' input is boolean ------ cannot get to work!! (Does not recognise BooleanType (NameError))
+        # assert type(debug) == BooleanType
         #check to see via boolean 'obj' variable whether the user wants to check the instance's deck or the class' deck
-        if obj == True:
+        if debug:
             #if test of input boolean argument determines True specify deck attribute as the object instance's tuple
             deck = self.deck
         else:
             #if test of boolean is False assign deck to the class' tuple
-            deck = Deck.card_names
+            deck = self.cards
 
         #test if the length of the tuple is 52 items long (52 card deck), if not raise assertion error
-        assert len(deck) == 52, "Amount of cards within given deck is incorrect."
+        assert len(deck) == 52, "Amount of cards within given deck is incorrect, 52 expected {} receieved.".format(len(deck))
         #call test function to verfiy the data for card objects within the deck
-        cardIter(deck)
+        cardIter(self.deck, debug_prints, suit_name, face_val)
         return True
 
 
@@ -57,49 +87,89 @@ class Card(object):
         """
         standard output of object's attributes for a print() call for the given object
         """
-        return "the face value is {} & the suit is {}.".format(self.value, self.suit)
+        return "{} of {}.".format(self.value, self.suit)
+
 
 class Hand(object):
 
     def __init__(self, deck_inst):
         """
-        Take the deck instance from the Deck class and introduce it inti
+        Hand will not initiate without an object instance for deck *test for this*. Intiates an attribute for hand instance of .hand
+        Calls makeHand (used for Hand.__init__ only) to generate the hand from the given deck instance
         """
         self.hand = ()
-    def __str__(self):
-        #intialise an empty string to take the final printed output
-        out_hand = ""
-        #initialise a for loop index, enumerate over self. hand in order to access an index
-        for i, card in enumerate(self.hand):
-            #this should give the index of the current iteration as the 'card number' followed by a triggering of the card class' in-built __str__ call
-            #append this string value to the current out_hand string
-            out_hand.append("Card {} is: {}\n".format(i, card))
+        #call the makeHand function with the input argument dack instance
+        makeHand(deck_inst)
 
+    def __str__(self):
+        out_tup = ()
+        for card in self.hand:
+            out_tup += (card,)
+        return out_tup
 
     def makeHand(self, deck_in):
-        while len(self.hand) < 7:
-            #select a random number to index the current deck instance by using the current length of the deck argument instance and 1 as range
-            index = (randint(1, len(deck_in.deck)) - 1)
-            self.hand += deck_in.deck[index]
+        """
+        Create a hand for the current player from a deck instance passed in as object and remove it from the deck instance's deck attribute
+        """
+        #initialise a variable for pciking a card from the deck
+        pick_card = 0
 
+        #assign the deck's list to a temporary variable
+        while len(self.hand) < 6:
+
+            #take a card from the input Deck instance and append it to the 'hand' tuple
+            self.hand += deck_in.deck[pick_card]
+
+            #convert self.deck to list and save to variable
+            deck_lst = list(deck_in.deck)
+
+            #remove this card from the current deck instance such that it cannot be re-picked within the given deck instance
+            deck_lst.remove(pick_card)
+
+            #overwrite the original <deck_instance>.deck with the new modified tuple
+            deck_in.setattr("deck", tuple(deck_lst))
+
+            #increment index of for loop
+            pick_card += 1
+
+def generateFaceVals(royalty, face_val):
+    # iterate over 10 values with a counter starting from 1
+    for i in range(1, 10):
+        #add current index no to tuple
+        face_val += (str(i),)
+
+    #add the names of the monarchy titles to face_val title
+    face_val += royalty
+
+    return face_val
+
+#assign boolean to toggle testing events in-script
+debug = True
+
+#flag whether test functions should output a print statement
+debug_prints = True
+
+#attribute base data
 suit_name = ("Hearts", "Diamonds", "Spades", "Clubs")
 royalty = ("Jack", "Queen", "King", "Ace")
 face_val = ()
+face_val = generateFaceVals(royalty, face_val)
 
-# iterate over 10 values with a counter starting from 1
-for i in range(0, 9):
-    #add current index no to tuple
-    face_val += ((i + 1),)
-
-#add the names of the monarchy titles to face_val title
-face_val += royalty
-
-#check the face_val list to ensure proper
-if debug is True:
+#check the face_val list to ensure correct values
+if debug:
     checkFaceVals(face_val)
 
-#generate a base tuple for the Deck class which holds the names of card objects
-Deck.deckOCards()
+deck1 = Deck(suit_name, face_val, debug_prints)
 
-if debug is True:
-    Deck.deckCheck(False)
+#such a redundant test case, but regardless... (check to see if item is an instance of Deck)
+confInstance(deck1, Deck)
+
+if debug:
+    deck1.deckCheck(False, debug_prints)
+    deck1.deckCheck(True, debug_prints)
+
+hand1 = Hand(deck1)
+
+print(hand1)
+
+print(hand1)
