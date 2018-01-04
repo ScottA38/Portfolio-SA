@@ -2,39 +2,6 @@
 N.B to future users of program - this program uses argv, so when intialising in terminal/powershell use the name
 of the file to be parsed minus the file type suffix after the script name - only '.txt' will be accepted for program
 
-i.e: > python ex16.py Lyrics1
-
-** Program to analyse song lyrics. **
-
-1) Open a .txt file and read() contents to a string (song lyrics)
-
-2) A regex to find each word without surrounding punctuation and using re.findall()
-
-3) Save results of 2) into a list (will be duplicates)
-
-3) Use the set() function on the saved list of strings and save as a new variable - reduce the returned list in 2) to ONLY unique values
-
-5) initiate an empty dict value
-
-4)iterate through the unique values in the list with set() applied, and through a nested iteration within this loop to check how many times the unique list item
-    matches with all the words in the song (from return of 3))
-
-5)For each match between the unique list of words to an item within the the full list of lyric word items increment a frequency count by 1
-    Make sure the frequency count corresponding to a specific unique word is reset to 0 when a new unique word is called (next iteration loop)
-
-6) Each time the nested for loop completes, (full lyrics in song checked) save the results to the dict as empty_dict[unique_word] = frequency_count
-
-7) Using returned frequency dict find maximum possible frequency count for a single word by calling max(freq_dict.values()) and assigning to a variable
-
-8) When the variable is returned run this through the min_freq() function which will return a tuple of tuple pairs where each tuple pair is a list of words and a frquency value
-    The words in the list all share the same frequency as the frequency shown the second part of that tuple pair
-    - In this instance the input is the maximum possible frequency, therefore only one maxmium frequency tuple pair will be returned
-
-9) Take user input via take_input function to gain an integer within the range of the possible word frequencies
-
-10) Run the min_freq() function once more with the user input as the argument, returning tuple pairs for all frequencies above or equal to the number specified
-
-
 Objectives:
 
 Initially the program will analyse the frequency of each unique word, saving the string
